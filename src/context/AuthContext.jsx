@@ -1,56 +1,37 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
-const AuthContext = createContext(null);
-
+const AuthContext = createContext();
 const API_BASE = 'https://ecommerce.routemisr.com/api/v1';
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('freshcart_token'));
-
-  useEffect(() => {
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUser({ id: decoded.id, name: decoded.name, email: decoded.email });
-      } catch {
-        logout();
-      }
-    }
-  }, [token]);
+  const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('userToken');
+    return token ? { token } : null;
+  });
 
   const login = async (email, password) => {
-    const { data } = await axios.post(`${API_BASE}/auth/signin`, { email, password });
-    if (data.message === 'success') {
-      localStorage.setItem('freshcart_token', data.token);
-      setToken(data.token);
-      return { success: true };
+    try {
+      const { data } = await axios.post(`${API_BASE}/auth/signin`, { email, password });
+      localStorage.setItem('userToken', data.token);
+      setUser({ token: data.token, name: data.user?.name });
+      toast.success('Logged in successfully', { position: 'bottom-right' });
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Login failed');
+      throw error;
     }
-    return { success: false, message: data.message };
-  };
-
-  const register = async (name, email, password, rePassword, phone) => {
-    const { data } = await axios.post(`${API_BASE}/auth/signup`, {
-      name, email, password, rePassword, phone,
-    });
-    if (data.message === 'success') {
-      localStorage.setItem('freshcart_token', data.token);
-      setToken(data.token);
-      return { success: true };
-    }
-    return { success: false, message: data.message };
   };
 
   const logout = () => {
-    localStorage.removeItem('freshcart_token');
-    setToken(null);
+    localStorage.removeItem('userToken');
     setUser(null);
+    toast.success('Logged out', { position: 'bottom-right' });
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, token: localStorage.getItem('userToken') }}>
       {children}
     </AuthContext.Provider>
   );

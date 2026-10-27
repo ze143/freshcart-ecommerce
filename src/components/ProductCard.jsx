@@ -1,36 +1,44 @@
 import { Link } from 'react-router-dom';
 import { FaStar, FaShoppingCart, FaHeart, FaRegHeart } from 'react-icons/fa';
-import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 const ProductCard = ({ product }) => {
-  const { dispatch } = useCart();
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { addToCart } = useCart();
+  const { wishlist, toggleWishlist } = useWishlist();
+  
+  const productId = product._id || product.id;
+
+  // التحقق الحقيقي مما إذا كان المنتج موجوداً في المفضلة (محلي أو سيرفر)
+  const isWishlisted = wishlist?.some(
+    (item) => (item._id || item.id || item) === productId
+  );
 
   const discount = product.priceAfterDiscount
     ? Math.round(((product.price - product.priceAfterDiscount) / product.price) * 100)
     : 0;
   const finalPrice = product.priceAfterDiscount || product.price;
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch({ type: 'ADD_ITEM', item: product });
-    toast.success('Added to cart', { icon: '🛒' });
+    if (addToCart) {
+      await addToCart(product._id);
+    } else {
+      toast.error('Unable to add to cart at the moment');
+    }
   };
 
-  const handleToggleWishlist = (e) => {
+  const handleToggleWishlist = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted((prev) => !prev);
-    toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist', {
-      icon: isWishlisted ? '💔' : '❤️',
-    });
+    // تمرير المنتج كاملاً للكونتكست لضمان الحفظ الفوري
+    await toggleWishlist(product);
   };
 
   return (
-    <div className="group relative bg-white rounded-xl border border-gray-100 hover:border-primary/30 hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
+    <div className="group relative bg-white rounded-xl border border-gray-100 hover:border-emerald-500/30 hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
       {discount > 0 && (
         <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
           -{discount}%
@@ -49,7 +57,7 @@ const ProductCard = ({ product }) => {
         )}
       </button>
 
-      <Link to={`/product/${product._id}`} className="block">
+      <Link to={`/product-details/${productId}`} className="block">
         <div className="relative h-52 w-full overflow-hidden bg-gray-50">
           <img
             src={product.imageCover}
@@ -63,8 +71,8 @@ const ProductCard = ({ product }) => {
       <div className="p-4 flex flex-col flex-grow">
         <p className="text-xs text-gray-500 mb-1">{product.category?.name}</p>
 
-        <Link to={`/product/${product._id}`}>
-          <h3 className="text-sm font-medium text-gray-800 line-clamp-2 hover:text-primary transition-colors min-h-[2.5rem]">
+        <Link to={`/product-details/${productId}`}>
+          <h3 className="text-sm font-medium text-gray-800 line-clamp-2 hover:text-emerald-600 transition-colors min-h-[2.5rem]">
             {product.title}
           </h3>
         </Link>
@@ -80,16 +88,16 @@ const ProductCard = ({ product }) => {
           <div>
             {product.priceAfterDiscount ? (
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-primary font-bold text-lg">{finalPrice} EGP</span>
+                <span className="text-emerald-600 font-bold text-lg">{finalPrice} EGP</span>
                 <span className="text-gray-400 text-sm line-through">{product.price} EGP</span>
               </div>
             ) : (
-              <span className="text-primary font-bold text-lg">{finalPrice} EGP</span>
+              <span className="text-emerald-600 font-bold text-lg">{finalPrice} EGP</span>
             )}
           </div>
           <button
             onClick={handleAddToCart}
-            className="bg-primary/10 text-primary p-2 rounded-full hover:bg-primary hover:text-white transition-colors duration-200"
+            className="bg-emerald-50 text-emerald-600 p-2 rounded-full hover:bg-emerald-600 hover:text-white transition-colors duration-200"
             aria-label="Add to cart"
           >
             <FaShoppingCart size={16} />

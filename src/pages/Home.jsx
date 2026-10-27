@@ -29,7 +29,7 @@ export default function Home() {
             <p className="text-gray-600 mb-4">Get up to 40% off on selected organic fruits</p>
             <Link
               to="/products"
-              className="inline-block bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 w-fit text-sm font-medium"
+              className="inline-block bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 w-fit text-sm font-medium transition"
             >
               Shop Now
             </Link>
@@ -40,17 +40,17 @@ export default function Home() {
           </div>
 
           {/* New Arrivals */}
-          <div className="relative bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 overflow-hidden min-h-[220px] flex flex-col justify-center">
-            <span className="text-sm font-semibold text-green-600 mb-2">✨ New Arrivals</span>
+          <div className="relative bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 overflow-hidden min-h-[220px] flex flex-col justify-center">
+            <span className="text-sm font-semibold text-emerald-600 mb-2">✨ New Arrivals</span>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Exotic Vegetables</h2>
             <p className="text-gray-600 mb-4">Discover our latest collection of premium vegetables</p>
             <Link
               to="/products"
-              className="inline-block bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 w-fit text-sm font-medium"
+              className="inline-block bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 w-fit text-sm font-medium transition"
             >
               Explore Now
             </Link>
-            <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-xs font-bold text-green-600 shadow">
+            <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-xs font-bold text-emerald-600 shadow">
               25% OFF
             </div>
             <p className="text-xs text-gray-500 mt-3">Use code: <span className="font-mono font-bold">FRESH25</span></p>
@@ -62,7 +62,7 @@ export default function Home() {
       <section className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-800">Featured Products</h2>
-          <Link to="/products" className="text-primary text-sm font-medium hover:underline">
+          <Link to="/products" className="text-emerald-600 text-sm font-medium hover:underline">
             View All →
           </Link>
         </div>
@@ -81,7 +81,7 @@ export default function Home() {
       {/* Newsletter */}
       <section className="bg-gray-50 py-12 mt-8">
         <div className="container mx-auto px-4 max-w-2xl text-center">
-          <span className="text-sm font-semibold text-primary">50,000+ subscribers</span>
+          <span className="text-sm font-semibold text-emerald-600">50,000+ subscribers</span>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mt-2 mb-2">
             Get the Freshest Updates Delivered Free
           </h2>
@@ -92,9 +92,9 @@ export default function Home() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
             />
-            <button className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 font-medium text-sm">
+            <button className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 font-medium text-sm transition">
               Subscribe
             </button>
           </form>
